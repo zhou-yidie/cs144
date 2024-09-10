@@ -77,7 +77,7 @@ string_view Reader::peek() const
   return string_view( front ).substr( front.size() - first_string_left_size );
 }
 
-void Reader::pop( uint64_t len )
+void Reader::pop(uint64_t len)
 {
   // Your code here.
   total_poped_ += len;
