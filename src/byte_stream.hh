@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include <queue>
 #include <string>
 #include <string_view>
+#include <queue>
 
 class Reader;
 class Writer;
@@ -48,8 +48,8 @@ public:
 class Reader : public ByteStream
 {
 public:
-  std::string_view peek() const; // Peek at the next bytes in the buffer_
-  void pop( uint64_t len );      // Remove `len` bytes from the buffer_
+  std::string_view peek() const; // Peek at the next bytes in the buffer
+  void pop( uint64_t len );      // Remove `len` bytes from the buffer
 
   bool is_finished() const;        // Is the stream finished (closed and fully popped)?
   uint64_t bytes_buffered() const; // Number of bytes currently buffered (pushed and not popped)
