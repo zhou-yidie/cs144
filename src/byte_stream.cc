@@ -28,8 +28,9 @@ void Writer::push( string data )
     return;
   data.resize( to_push_size );
   buffer_.emplace( std::move( data ) );
-  if ( buffer_.size() == 1 )
+  if ( buffer_.size() == 1 ) {
     first_string_left_size = to_push_size;
+  }
   total_pushed_ += to_push_size;
   amount_ += to_push_size;
   return;
