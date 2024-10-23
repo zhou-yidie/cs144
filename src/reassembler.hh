@@ -2,11 +2,32 @@
 
 #include "byte_stream.hh"
 
+struct reassembler_item {
+  std::string data;
+  uint64_t first_index;
+  uint64_t last_index;
+  bool is_last;
+
+  bool operator < (const reassembler_item& x) const {
+    return first_index < x.first_index;
+  }
+
+  reassembler_item(std::string data1, uint64_t first_index1, uint64_t last_index1, bool is_last1)
+    : data(std::move(data1)),
+    first_index(first_index1),
+    last_index(last_index1),
+    is_last(is_last1) {}
+};
+
 class Reassembler
 {
 public:
   // Construct Reassembler to write into given ByteStream.
-  explicit Reassembler( ByteStream&& output ) : output_( std::move( output ) ) {}
+  explicit Reassembler( ByteStream&& output )
+    : output_( std::move( output ) ),
+    buffer_(),
+    pending_size_(0),
+    current_index_(0) {}
 
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -42,4 +63,7 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
+  std::vector<reassembler_item> buffer_;
+  uint64_t pending_size_;
+  uint64_t current_index_;
 };
