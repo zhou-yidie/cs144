@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include <queue>
 #include <string>
 #include <string_view>
+#include <queue>
 
 class Reader;
 class Writer;
@@ -25,13 +25,14 @@ public:
 protected:
   // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
   uint64_t capacity_;
-  std::queue<std::string> buffer_;
-  uint64_t amount_;
-  uint64_t total_pushed_;
-  uint64_t total_poped_;
-  uint64_t first_string_left_size;
-  bool close_;
   bool error_ {};
+
+  enum State { CLOSED, ERROR };
+  unsigned char flag {};
+  uint64_t bytes_pushed_ {};
+  uint64_t bytes_popped_ {};
+  std::queue<std::string> buffer_data {};
+  std::string_view buffer_view {};
 };
 
 class Writer : public ByteStream
@@ -39,6 +40,7 @@ class Writer : public ByteStream
 public:
   void push( std::string data ); // Push data to stream, but only as much as available capacity allows.
   void close();                  // Signal that the stream has reached its ending. Nothing more will be written.
+  void set_error();
 
   bool is_closed() const;              // Has the stream been closed?
   uint64_t available_capacity() const; // How many bytes can be pushed to the stream right now?
@@ -52,6 +54,7 @@ public:
   void pop( uint64_t len );      // Remove `len` bytes from the buffer
 
   bool is_finished() const;        // Is the stream finished (closed and fully popped)?
+  bool has_error() const;
   uint64_t bytes_buffered() const; // Number of bytes currently buffered (pushed and not popped)
   uint64_t bytes_popped() const;   // Total number of bytes cumulatively popped from stream
 };
