@@ -6,7 +6,7 @@ ByteStream::ByteStream( uint64_t capacity ) : capacity_( capacity ) {}
 
 bool Writer::is_closed() const
 {
-  // Your code here.
+  // Your code here. newstart
   return flag & ( 1 << CLOSED );
 }
 
